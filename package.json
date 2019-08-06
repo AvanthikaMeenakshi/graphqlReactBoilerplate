@@ -9,9 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "apollo-server-express": "^2.8.1",
     "express": "^4.17.1",
     "express-graphql": "^0.9.0",
     "graphql": "^14.4.2",
-    "mongodb": "^3.3.0-beta2"
+    "mongodb": "^3.3.0-beta2",
+    "mysql": "^2.17.1"
   }
 }
