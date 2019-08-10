@@ -2,36 +2,35 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { useQuery } from '@apollo/react-hooks';
-import { GET_USERS } from "./Queries";
-import { Table } from 'reactstrap';
+import { GET_USERS, VIEW_USERS } from "./Queries";
+import { Card, CardBody, CardHeader, CardSubtitle, Spinner } from 'reactstrap';
 
 function App() {
-  const { loading, error, data } = useQuery(GET_USERS);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
+  const getAllUsers = useQuery(GET_USERS);
+  const userInfo = useQuery(VIEW_USERS, { variables: { id: 1 }});
+  if (getAllUsers.loading) return <Spinner color="dark" />;
+  if (getAllUsers.error) return <React.Fragment>Error :(</React.Fragment>;
 
   return (
-    <Table dark>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Username</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.getUsers.map(({ id, name, email, job_title }) => (
-            <tr>
-              <th scope="row">{id}</th>
-              <td>{name}</td>
-              <td>{email}</td>
-              <td>{job_title}</td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+    <div className="container">
+      <Card>
+        <CardHeader>Query - Displaying all data</CardHeader>
+        <CardBody>
+          <pre>
+            {JSON.stringify(getAllUsers.data, null, 2)}
+          </pre>
+        </CardBody>
+      </Card>
+      <Card>
+        <CardHeader>Query - Displaying data with args</CardHeader>
+        <CardBody>
+          <CardSubtitle>Viewing a user by id</CardSubtitle>
+          <pre>
+            {JSON.stringify(userInfo.data, null, 2)}
+          </pre>
+        </CardBody>
+      </Card>
+    </div>
   )
 }
 
