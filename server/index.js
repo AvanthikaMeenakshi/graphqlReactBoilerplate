@@ -1,9 +1,13 @@
-var express = require('express');
-var graphqlHTTP = require('express-graphql');
-var { buildSchema } = require('graphql');
-var mysql = require('mysql');
+const express = require('express');
+const graphqlHTTP = require('express-graphql');
+const { buildSchema } = require('graphql');
+const mysql = require('mysql');
+const cors = require('cors')
 
-var schema = buildSchema(`
+const app = express();
+app.use(cors())
+
+const schema = buildSchema(`
   type User {
     id: String
     name: String
@@ -29,15 +33,13 @@ const queryDB = (req, sql, args) => new Promise((resolve, reject) => {
     });
 });
 
-var root = {
+const root = {
   getUsers: (args, req) => queryDB(req, "select * from users").then(data => data),
   getUserInfo: (args, req) => queryDB(req, "select * from users where id = ?", [args.id]).then(data => data[0]),
   updateUserInfo: (args, req) => queryDB(req, "update users SET ? where id = ?", [args, args.id]).then(data => data),
   createUser: (args, req) => queryDB(req, "insert into users SET ?", args).then(data => data),
   deleteUser: (args, req) => queryDB(req, "delete from users where id = ?", [args.id]).then(data => data)
 };
-
-var app = express();
 
 app.use((req, res, next) => {
   req.mysqlDb = mysql.createConnection({
