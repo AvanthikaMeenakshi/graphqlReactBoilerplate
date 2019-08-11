@@ -1,6 +1,4 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_USERS, VIEW_USERS } from "./Queries";
 import { Card, CardBody, CardHeader, CardSubtitle, Spinner } from 'reactstrap';
@@ -8,8 +6,8 @@ import { Card, CardBody, CardHeader, CardSubtitle, Spinner } from 'reactstrap';
 function App() {
   const getAllUsers = useQuery(GET_USERS);
   const userInfo = useQuery(VIEW_USERS, { variables: { id: 1 }});
-  if (getAllUsers.loading) return <Spinner color="dark" />;
-  if (getAllUsers.error) return <React.Fragment>Error :(</React.Fragment>;
+  if (getAllUsers.loading || userInfo.loading) return <Spinner color="dark" />;
+  if (getAllUsers.error || userInfo.error) return <React.Fragment>Error :(</React.Fragment>;
 
   return (
     <div className="container">
