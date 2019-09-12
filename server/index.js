@@ -2,6 +2,10 @@ var express = require('express');
 var graphqlHTTP = require('express-graphql');
 var { buildSchema } = require('graphql');
 var mysql = require('mysql');
+var cors = require('cors');
+
+var app = express();
+app.use(cors());
 
 var schema = buildSchema(`
   type User {
@@ -36,8 +40,6 @@ var root = {
   createUser: (args, req) => queryDB(req, "insert into users SET ?", args).then(data => data),
   deleteUser: (args, req) => queryDB(req, "delete from users where id = ?", [args.id]).then(data => data)
 };
-
-var app = express();
 
 app.use((req, res, next) => {
   req.mysqlDb = mysql.createConnection({
